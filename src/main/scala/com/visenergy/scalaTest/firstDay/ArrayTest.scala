@@ -16,5 +16,14 @@ object ArrayTest {
     }
     
     println(total)
+    //List学习，两个冒号(:)和三个冒号(:)的使用
+    val one = List(1,2,3,4,5,6)
+    val two = List(6,7,8,9,10)
+    
+    val three = one:::two
+    println(three)
+    
+    val four = 1 :: three
+    println(four)
   }
 }

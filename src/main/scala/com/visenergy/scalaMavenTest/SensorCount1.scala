@@ -14,7 +14,7 @@ object SensorCount1 {
 	    sparkServer = args(0)
 	  }
 	  
-	  var inputPath = "test/test*.json"
+	  var inputPath = "test/*"
 	  //var inputPath = "hdfs://localhost:9000/input/test/"
 	  
 	  if(args.length > 1 && args(1) != None){

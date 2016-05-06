@@ -7,7 +7,7 @@ object SparkTest {
 
   def main(args: Array[String]): Unit = {
     
-	val conf = new SparkConf().setAppName("sparkTest").setMaster("spark://192.168.230.6:7077")
+	val conf = new SparkConf().setAppName("sparkTest").setMaster("local")
 	val sc = new SparkContext(conf)
     
 	
