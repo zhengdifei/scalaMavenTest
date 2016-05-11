@@ -44,18 +44,18 @@ object DirectKafkaWordCount4 {
 
     
     //val Array(brokers, topics) = args
-    val Array(brokers, topics) = Array("192.168.100.11:9092","sensorData")
+    val Array(brokers, topics) = Array("localhost:9092","sensorData")
     def createStreamingContext():StreamingContext = {
-      val conf = new SparkConf().setAppName("SparkStreamingTest4").setMaster("spark://node10:7077");
+      val conf = new SparkConf().setAppName("SparkStreamingTest4").setMaster("local[2]");
 
       val ssc = new StreamingContext(conf,Seconds(6));
       
-       ssc.checkpoint("hdfs://node10:9000/test/point1")
+       ssc.checkpoint("hdfs://localhost:9000/test/point1")
        
        return ssc
     }
     //?
-    val ssc = StreamingContext.getOrCreate("hdfs://node10:9000/test/point1", createStreamingContext _)
+    val ssc = StreamingContext.getOrCreate("hdfs://localhost:9000/test/point1", createStreamingContext _)
     
     // Create direct kafka stream with brokers and topics
     val topicsSet = topics.split(",").toSet

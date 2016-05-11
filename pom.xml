@@ -13,6 +13,7 @@
     <encoding>UTF-8</encoding>
     <scala.version>2.11.5</scala.version>
     <scala.compat.version>2.11</scala.compat.version>
+    <hadoop.version>2.6.4</hadoop.version>
   </properties>
 
   <dependencies>
@@ -53,34 +54,85 @@
 		<artifactId>json</artifactId>
 		<version>20160212</version>
 	</dependency>
+	<dependency>
+        <groupId>redis.clients</groupId>
+        <artifactId>jedis</artifactId>
+        <version>2.5.2</version>
+   </dependency>
+   <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-pool2</artifactId>
+        <version>2.2</version>
+   </dependency>
+   <dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.12</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.hbase</groupId>
+		<artifactId>hbase-server</artifactId>
+		<version>1.1.4</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.hbase</groupId>
+		<artifactId>hbase-client</artifactId>
+		<version>1.1.4</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.hbase</groupId>
+		<artifactId>hbase-common</artifactId>
+		<version>1.1.4</version>
+	</dependency>
   </dependencies>
-
   <build>
     <sourceDirectory>src/main/scala</sourceDirectory>
-    <pluginManagement>
     <plugins>
       <plugin>
-        <!-- see http://davidb.github.com/scala-maven-plugin -->
-        <groupId>net.alchim31.maven</groupId>
-        <artifactId>scala-maven-plugin</artifactId>
-        <version>3.2.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-              <goal>testCompile</goal>
-            </goals>
-            <configuration>
-              <args>
-                <arg>-make:transitive</arg>
-                <arg>-dependencyfile</arg>
-                <arg>${project.build.directory}/.scala_dependencies</arg>
-              </args>
-            </configuration>
-          </execution>
-        </executions>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-shade-plugin</artifactId>
+           <version>2.4.3</version>
+           <configuration>
+                <createDependencyReducedPom>true</createDependencyReducedPom>
+           </configuration>
+           <executions>
+                <execution>
+                     <phase>package</phase>
+                     <goals>
+                          <goal>shade</goal>
+                     </goals>
+                     <configuration>
+                          <artifactSet>
+                               <includes>
+                                    <include>*:*</include>
+                               </includes>
+                          </artifactSet>
+                          <filters>
+                               <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                         <exclude>META-INF/*.SF</exclude>
+                                         <exclude>META-INF/*.DSA</exclude>
+                                         <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                               </filter>
+                          </filters>
+                          <transformers>
+                               <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                               <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>reference.conf</resource>
+                               </transformer>
+                               <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+                                    <resource>log4j.properties</resource>
+                               </transformer>
+                          </transformers>
+                     </configuration>
+                </execution>
+           </executions>
       </plugin>
     </plugins>
-    </pluginManagement>
   </build>
 </project>

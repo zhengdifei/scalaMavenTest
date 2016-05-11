@@ -25,13 +25,12 @@ import org.apache.spark.streaming.kafka._
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql._
 import scala.util.parsing.json.JSON
-import org.apache.hadoop.io.NullWritable
-import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
-import com.fasterxml.jackson.databind.ObjectMapper
+import redis.clients.jedis.JedisPool
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig
 /**
- * spark streaming与spark sql结合
+ * spark streaming与spark sql结合+redis
  */
-object DirectKafkaWordCount2 {
+object DirectKafkaWordCount7 {
   
   def main(args: Array[String]) {
     if (args.length < 2) {
@@ -45,7 +44,7 @@ object DirectKafkaWordCount2 {
     }
 
     //val Array(brokers, topics) = args
-    val Array(brokers, topics) = Array("localhost:9092","sensorData")
+    val Array(brokers, topics) = Array("localhost:9092","twoPartitionTopic")
     // Create context with 2 second batch interval
     val sparkConf = new SparkConf().setAppName("DirectKafkaWordCount2").setMaster("local")
     val sc = new SparkContext(sparkConf)
@@ -63,32 +62,70 @@ object DirectKafkaWordCount2 {
       val afterR = str.replace("[", "").replace("]", "").replace("},{", "}&&{")
 	  afterR.split("&&")
     }
-    val mapper = new ObjectMapper()
-     
+    
     val ds1 = messages.map(x =>(x._2 ))
     val ds2 = ds1.flatMap(parseData)
-   
     ds2.foreachRDD(rdd => {
-        //RDD,DataFrame的存储都是不带时间标识的，会覆盖或者报错
-    	//保存方式
-    	//rdd.map(x=>(NullWritable.get(),x)).saveAsSequenceFile("test/kryo/zdf")
-    	//json方式保存
-        //rdd.saveAsTextFile("test/json/zdf1")
-    	//rdd.map(mapper.writeValueAsString(_)).saveAsTextFile("test/json/zdf2")
+    	rdd.foreachPartition(partitionsRecords => {
+    	  partitionsRecords.foreach(pair => {
+    	    object InternalRedisClient extends Serializable {
+    	      @transient private var pool:JedisPool = null
+    	      
+    	      def makePool(redisHost:String,redisPort:Int,redisTimeout:Int,
+    	          maxTotal:Int,maxIdle:Int,minIdle:Int):Unit = {
+    	        makePool(redisHost, redisPort, redisTimeout, maxTotal, maxIdle, minIdle, true, false, 10000)
+    	      }
+    	      
+    	      def makePool(redisHost:String,redisPort:Int,redisTimeout:Int,
+    	          maxTotal:Int,maxIdle:Int,minIdle:Int,
+    	          testOnBorrow:Boolean,testOnReturn:Boolean,maxWaitMillis:Long):Unit = {
+    	        if(pool == null){
+    	          val poolConfig = new GenericObjectPoolConfig()
+    	          poolConfig.setMaxIdle(maxIdle)
+
+                  poolConfig.setMinIdle(minIdle)
+
+                  poolConfig.setTestOnBorrow(testOnBorrow)
+
+                  poolConfig.setTestOnReturn(testOnReturn)
+
+                  poolConfig.setMaxWaitMillis(maxWaitMillis)
+
+                  pool = new JedisPool(poolConfig, redisHost, redisPort, redisTimeout)
+
+    	        }
+    	      }
+    	      
+    	      def getPool : JedisPool = {
+    	        pool
+    	      }
+    	    }
+    	    
+    	  // Redis configurations
+          val maxTotal = 10
+          val maxIdle = 10
+          val minIdle = 1
+          val redisHost = "localhost"
+          val redisPort = 6379
+          val redisTimeout = 30000
+          val dbIndex = 1
+          InternalRedisClient.makePool(redisHost, redisPort, redisTimeout, maxTotal, maxIdle, minIdle)
+          
+          val jedis =InternalRedisClient.getPool.getResource
+          jedis.select(dbIndex)
+          jedis.hincrBy("abc", "zhengdifei", 100)
+          InternalRedisClient.getPool.returnResource(jedis)
+    	  })
+    	})
+    	
 //    	if(!rdd.isEmpty){
 //    	  val t = sqc.jsonRDD(rdd)
 //    	  //t.printSchema()
 //    	  t.registerTempTable("eData")
 //    	  val sqlReport = sqc.sql("select SNAME,count(SNAME) as num,AVG(UA) avg_ua,sum(jg) as sum_jg from eData group by SNAME order by sum_jg")
-//    	  sqlReport.save("test/table/zdf")
+//    	  sqlReport.foreach(print)
 //    	}
     })
-    //保存本地文件
-    //ds2.saveAsTextFiles("test/txt/zdf","json")
-    //ds2.saveAsObjectFiles("test/obj/zdf")
-
-    //保存到hdfs
-    //ds2.saveAsTextFiles("hdfs://localhost:9000/test/zdf")
     //ds3.print()
     // Start the computation
     ssc.start()
