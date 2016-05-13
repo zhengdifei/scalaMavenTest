@@ -16,13 +16,13 @@ object Hbase2Spark {
   def main(args: Array[String]): Unit = {
 	val conf = HBaseConfiguration.create()
 	conf.set("hbase.zookeeper.quorum","localhost")
-    conf.set("hbase.zookeeper.property.clientPort", "2181")
-    
-    //设置查询的表名
-    conf.set(TableInputFormat.INPUT_TABLE, "user")
+  conf.set("hbase.zookeeper.property.clientPort", "2181")
+  
+  //设置查询的表名
+  conf.set(TableInputFormat.INPUT_TABLE, "user")
 
-    val sparkConf = new SparkConf().setAppName("hbaseTest3").setMaster("local")
-    val sc = new SparkContext(sparkConf)
+  val sparkConf = new SparkConf().setAppName("hbaseTest3").setMaster("local")
+  val sc = new SparkContext(sparkConf)
 	val userRDD = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable], classOf[org.apache.hadoop.hbase.client.Result])
 	
 	val count = userRDD.count
