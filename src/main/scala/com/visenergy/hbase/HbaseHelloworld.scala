@@ -1,17 +1,16 @@
 package com.visenergy.hbase114
 
 import org.apache.hadoop.hbase.HBaseConfiguration
-import org.apache.hadoop.hbase.client.ConnectionFactory
-import org.apache.hadoop.hbase.client.Admin
-import org.apache.hadoop.hbase.TableName
-import org.apache.hadoop.hbase.HTableDescriptor
 import org.apache.hadoop.hbase.HColumnDescriptor
+import org.apache.hadoop.hbase.HTableDescriptor
+import org.apache.hadoop.hbase.TableName
 import org.apache.hadoop.hbase.client.Connection
-import org.apache.hadoop.hbase.client.Put
-import org.apache.hadoop.hbase.client.Get
-import org.apache.hadoop.hbase.util.Bytes
-import org.apache.hadoop.hbase.client.Scan
+import org.apache.hadoop.hbase.client.ConnectionFactory
 import org.apache.hadoop.hbase.client.Delete
+import org.apache.hadoop.hbase.client.Get
+import org.apache.hadoop.hbase.client.Put
+import org.apache.hadoop.hbase.client.Scan
+import org.apache.hadoop.hbase.util.Bytes
 /**
  * 1.创建hbase连接
  * 2.创建表
@@ -54,6 +53,7 @@ object HbaseHelloworld {
   def main(args: Array[String]): Unit = {
     //初始化hbase连接
 	val conn = hbaseInit()
+	
 	
 	try{
 		//获取user表
