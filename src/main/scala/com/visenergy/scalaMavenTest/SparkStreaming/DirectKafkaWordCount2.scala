@@ -83,6 +83,7 @@ object DirectKafkaWordCount2 {
 //    	  sqlReport.save("test/table/zdf")
 //    	}
     })
+    println(ds2.count())
     //保存本地文件
     //ds2.saveAsTextFiles("test/txt/zdf","json")
     //ds2.saveAsObjectFiles("test/obj/zdf")

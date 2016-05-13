@@ -42,7 +42,7 @@ object DirectKafkaWordCount3 {
     }
 
     //val Array(brokers, topics) = args
-    val Array(brokers, topics) = Array("192.168.100.11:9092","sensorData")
+    val Array(brokers, topics) = Array("localhost:9092","sensorData")
     // Create context with 2 second batch interval
     val sparkConf = new SparkConf().setAppName("DirectKafkaWordCount3").setMaster("local")
     val sc = new SparkContext(sparkConf)

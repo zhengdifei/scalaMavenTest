@@ -35,7 +35,7 @@ object Spark2Hbase {
 	val rawData = List((4,"lilei1",21),(5,"hanmei1",24),(6,"zhengfei1",19))
 	val localData = sc.parallelize(rawData).map(convert)
 	
-	localData.saveAsHadoopDataset(jobConf);
+	localData.saveAsHadoopDataset(jobConf)
   }
 
 }
