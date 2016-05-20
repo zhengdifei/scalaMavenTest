@@ -27,7 +27,17 @@ object HBase2Spark {
     
   	val hbaseRdd = sc.newAPIHadoopRDD(conf, classOf[TableInputFormat], 
   	    classOf[org.apache.hadoop.hbase.io.ImmutableBytesWritable], classOf[org.apache.hadoop.hbase.client.Result])
-    
-    hbaseRdd.map(line => Bytes.toString((line._2).value())) 
+  	
+  	hbaseRdd.flatMap(line => {
+  	  val values = (line._2).getFamilyMap(Bytes.toBytes(BaseConfig.COLUMN_FAMILY)).values()
+  	  val valueIter = values.iterator()
+  	  var list = List[String]() 
+  	  while(valueIter.hasNext()) {
+  	    list ::= Bytes.toString(valueIter.next())
+  	  }
+  	  list
+  	})
+  	    
+//    hbaseRdd.map(line => Bytes.toString((line._2).value())) 
   }
 }
