@@ -45,13 +45,19 @@ object DirectKafkaWordCount2 {
     }
 
     //val Array(brokers, topics) = args
-    val Array(brokers, topics) = Array("localhost:9092","sensorData")
+    val Array(brokers, topics) = Array("node13:9092,node14:9092","sensorData")
     // Create context with 2 second batch interval
     val sparkConf = new SparkConf().setAppName("DirectKafkaWordCount2").setMaster("local[2]")
+    //只是忽然错误，并不是允许创建两个SparkContext对象
+    sparkConf.set("spark.driver.allowMultipleContexts","true")
     val sc = new SparkContext(sparkConf)
-    val ssc = new StreamingContext(sc, Seconds(6))
-    val sqc = new SQLContext(sc)
-
+    
+    val sc1 = new SparkContext(sparkConf)
+    val ssc = new StreamingContext(sc1, Seconds(6))
+    val sqc = new SQLContext(sc1)
+    
+    
+    
     import sqc._
     // Create direct kafka stream with brokers and topics
     val topicsSet = topics.split(",").toSet
@@ -67,8 +73,8 @@ object DirectKafkaWordCount2 {
      
     val ds1 = messages.map(x =>(x._2 ))
     val ds2 = ds1.flatMap(parseData)
-   
-    ds2.foreachRDD(rdd => {
+    ds2.print()
+//    ds2.foreachRDD(rdd => {
         //RDD,DataFrame的存储都是不带时间标识的，会覆盖或者报错
     	//保存方式
     	//rdd.map(x=>(NullWritable.get(),x)).saveAsSequenceFile("test/kryo/zdf")
@@ -82,8 +88,8 @@ object DirectKafkaWordCount2 {
 //    	  val sqlReport = sqc.sql("select SNAME,count(SNAME) as num,AVG(UA) avg_ua,sum(jg) as sum_jg from eData group by SNAME order by sum_jg")
 //    	  sqlReport.save("test/table/zdf")
 //    	}
-    })
-    println(ds2.count())
+//    })
+    //println(ds2.count())
     //保存本地文件
     //ds2.saveAsTextFiles("test/txt/zdf","json")
     //ds2.saveAsObjectFiles("test/obj/zdf")

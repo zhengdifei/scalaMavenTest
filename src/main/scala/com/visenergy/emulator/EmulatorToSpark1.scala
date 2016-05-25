@@ -29,6 +29,7 @@ object EmulatorToSpark1 {
   def parseJsonArrStr2JsonObjStr(jsonArrayStr:String):Array[String] = {
     val transformOne = jsonArrayStr.replace("[", "").replace("]", "").replace("},{", "}&&{")
     transformOne.split("&&")
+    
   }
   
   //获取hbase任务配置
