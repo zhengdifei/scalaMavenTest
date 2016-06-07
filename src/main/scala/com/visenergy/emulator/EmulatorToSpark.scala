@@ -226,8 +226,8 @@ object EmulatorToSpark {
 		    RedisDao.makePool("node13")
 			val redisClient = RedisDao.getPool.getResource()
 		    //统计拦截器数量，字节数
-			redisClient.incrBy("sales_count", acc_sum.value)
-			redisClient.incrBy("sales_amount", acc_bytes.value)
+			//redisClient.incrBy("sales_count", acc_sum.value)
+			//redisClient.incrBy("sales_amount", acc_bytes.value)
 	    	
 			val rddJsonObjStr = rdd.flatMap(parseJsonArrStr2JsonObjStr)
 			//统计其他信息
@@ -237,9 +237,9 @@ object EmulatorToSpark {
 			//因为数据量不大，所以将所有数据都汇总，不再每一个partition中创建redis
 			df2.collect.foreach(row => {
 			    //计算每一个模拟器数量，总价格，平均价格
-				redisClient.hincrBy("outlet_count",row.getAs[String]("SID") ,row.getAs[Long]("outlet_count"))
-				redisClient.hset("outlet_amount", row.getAs[String]("SID") , row.getAs[Long]("outlet_amount").toString)
-				redisClient.hset("outlet_avg_price", row.getAs[String]("SID") , row.getAs[Long]("outlet_avg_price").toString)
+				//redisClient.hincrBy("outlet_count",row.getAs[String]("SID") ,row.getAs[Long]("outlet_count"))
+				//redisClient.hset("outlet_amount", row.getAs[String]("SID") , row.getAs[Long]("outlet_amount").toString)
+				//redisClient.hset("outlet_avg_price", row.getAs[String]("SID") , row.getAs[Long]("outlet_avg_price").toString)
 			})
 			
 			
