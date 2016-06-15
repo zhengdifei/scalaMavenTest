@@ -38,7 +38,9 @@ object RedisDao extends Serializable {
   }
   
   def main(args: Array[String]): Unit = {
-    
+    RedisDao.makePool("node13")
+    val redisClient = RedisDao.getPool.getResource()
+    RedisDao.getPool.returnResource(redisClient)
   }
 
 }

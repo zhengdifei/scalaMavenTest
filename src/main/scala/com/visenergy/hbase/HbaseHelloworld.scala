@@ -1,4 +1,4 @@
-package com.visenergy.hbase114
+package com.visenergy.hbase
 
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.HColumnDescriptor
@@ -22,8 +22,8 @@ import org.apache.hadoop.hbase.util.Bytes
 object HbaseHelloworld {
   def hbaseInit(zkIp:String="localhost",zkPort:String="2181") : Connection = {
     val conf = HBaseConfiguration.create()
-    conf.set("hbase.zookeeper.quorum","localhost")
-    conf.set("hbase.zookeeper.property.clientPort", "2181")
+    conf.set("hbase.zookeeper.quorum",zkIp)
+    conf.set("hbase.zookeeper.property.clientPort", zkPort)
     
     val conn = ConnectionFactory.createConnection(conf)
     conn
@@ -53,7 +53,6 @@ object HbaseHelloworld {
   def main(args: Array[String]): Unit = {
     //初始化hbase连接
 	val conn = hbaseInit()
-	
 	
 	try{
 		//获取user表

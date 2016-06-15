@@ -6,10 +6,7 @@ import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
 import scala.util.control.Breaks._
 /**
  * Created by xuyao on 15-7-24.
- * 求中位数，数据是分布式存储的
- * 将整体的数据分为K个桶，统计每个桶内的数据量，然后统计整个数据量
- * 根据桶的数量和总的数据量，可以判断数据落在哪个桶里，以及中位数的偏移量
- * 取出这个中位数
+ * 累加器+rdd结构
  */
 object SparkTest6 {
   def main(args: Array[String]): Unit = {
