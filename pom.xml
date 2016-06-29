@@ -84,6 +84,21 @@
 		<artifactId>hbase-common</artifactId>
 		<version>1.1.4</version>
 	</dependency>
+	<dependency>
+		<groupId>org.apache.spark</groupId>
+		<artifactId>spark-mllib_2.11</artifactId>
+		<version>1.6.1</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.spark</groupId>
+		<artifactId>spark-graphx_2.11</artifactId>
+		<version>1.6.1</version>
+	</dependency>
+	<dependency>
+    	<groupId>org.jblas</groupId>
+    	<artifactId>jblas</artifactId>
+    	<version>1.2.4</version>
+	</dependency>
   </dependencies>
   <build>
     <sourceDirectory>src/main/scala</sourceDirectory>

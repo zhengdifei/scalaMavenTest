@@ -267,6 +267,7 @@ object EmulatorToSpark {
     //利用window，计算一段时间销售排行
     val sensorWin1 = sensorDs.flatMap(parseJsonArrStr2JsonObjStr).map(parseJsonStr2JsonObj).map(rdd => (rdd.getString("SID"),rdd.getLong("price")))
     val sensorWin2 = sensorWin1.reduceByKeyAndWindow(_+_, _-_, Seconds(30), Seconds(12))
+    
     sensorWin2.foreachRDD(rdd => {
        if(!rdd.isEmpty){
     	   try{

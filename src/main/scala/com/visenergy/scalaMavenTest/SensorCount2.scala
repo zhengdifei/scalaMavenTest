@@ -22,9 +22,10 @@ object SensorCount2 {
 	  if(args.length > 0 && args(0) != None){
 	    sparkServer = args(0)
 	  }
-	  var inputPath = "test/test*.json"
-	  //var inputPath = "hdfs://localhost:9000/input/data2/*"
-	  
+//	  var inputPath = "test/sensorData1.json"
+//	  var inputPath = "hdfs://localhost:9000/input/data2/*"
+	  var inputPath = "D:/project_room/scalaWorkspace/scalaMavenTest/test/sensorData1.json"
+	    
 	  if(args.length > 1 && args(1) != None){
 	    inputPath = args(1)
 	  }
