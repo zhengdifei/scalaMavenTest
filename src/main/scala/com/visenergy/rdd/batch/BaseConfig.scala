@@ -1,4 +1,7 @@
-package com.visenergy.rdd.release
+package com.visenergy.rdd.batch
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 object BaseConfig extends Serializable {
   /** hbase config **/
@@ -25,6 +28,12 @@ object BaseConfig extends Serializable {
   val DATA_DISTRIBUTION_NODES = 12L
   val RANK_BY_KEY_FIRST_NUM = 10
   /** unit is second **/
-  val REDIS_KEY_TIMEOUT = 60
+  val REDIS_KEY_TIMEOUT = 10
+  
+  def strToTimeStamp(str:String) : Long = {
+    val simpleDateFormat:SimpleDateFormat  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	  val date = simpleDateFormat.parse(str);
+	  date.getTime();
+  }
   
 }

@@ -1,4 +1,4 @@
-package com.visenergy.rdd.release
+package com.visenergy.rdd.batch
 
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.Connection
