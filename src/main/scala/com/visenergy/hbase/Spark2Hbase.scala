@@ -1,4 +1,4 @@
-package com.visenergy.hbase114
+package com.visenergy.hbase
 
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.client.Put

@@ -1,4 +1,4 @@
-package com.visenergy.hbase114
+package com.visenergy.hbase
 
 import org.apache.hadoop.hbase.HBaseConfiguration
 import org.apache.hadoop.hbase.HColumnDescriptor
@@ -53,7 +53,7 @@ object HbaseHelloworld {
   def main(args: Array[String]): Unit = {
     //初始化hbase连接
 	val conn = hbaseInit()
-	
+	createTable("user",conn)
 	
 	try{
 		//获取user表

@@ -15,7 +15,7 @@
     <scala.compat.version>2.11</scala.compat.version>
     <hadoop.version>2.6.4</hadoop.version>
   </properties>
-
+  
   <dependencies>
     <dependency>
 		<groupId>org.apache.spark</groupId>

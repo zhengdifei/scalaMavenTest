@@ -6,10 +6,10 @@ import java.io.File
 
 object RddManager {
   def main(args:Array[String]) {
-    val conf = new SparkConf().setAppName("MsgProceedHandler").setMaster("local[2]")
+    val conf = new SparkConf().setAppName("MsgProceedHandler")
     val sc = new SparkContext(conf)
     
-    val msg = sc.textFile("/home/vis9/projects/testData/RddData/RddData.json")
+    val msg = sc.textFile("/usr/software/tengdajun/RddData.json")
     val rddOp:RddOperation = new RddOperation();
     
 //    msg.persist()

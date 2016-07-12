@@ -6,7 +6,7 @@ import org.apache.spark.SparkContext
 object SparkTest2 {
   def main(args: Array[String]): Unit = {
     
-	val conf = new SparkConf().setAppName("sparkTest").setMaster("spark://192.168.100.101:7077")
+	val conf = new SparkConf().setAppName("sparkTest").setMaster("local")
 	val sc = new SparkContext(conf)
     
 	val rdd1 = sc.parallelize(Array(1,2,3,3))
