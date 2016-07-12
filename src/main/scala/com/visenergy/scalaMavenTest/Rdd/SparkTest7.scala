@@ -4,7 +4,7 @@ import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD.rddToPairRDDFunctions
 /**
- * 
+ * 通过mapPartitionsWithInde求中位数
  */
 object SparkTest7 {
   def main(args: Array[String]): Unit = {
@@ -36,7 +36,7 @@ object SparkTest7 {
 	//rdd2.foreach(println)
 	
 	var count = rdd1.sum
-	
+	println(count)
 	
 	val rdd3 = rdd1.sortBy(x=>x,true).mapPartitionsWithIndex{ 
 	  (partIdx,iter) =>{

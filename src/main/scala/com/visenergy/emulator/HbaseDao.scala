@@ -15,6 +15,9 @@ import org.json.JSONObject
 import org.json.JSONArray
 /**
  * 创建Hbase操作集合
+ * 异常信息：当我先运行kafka服务，在运行hbase服务，将出现错误：
+ * Exception in thread "main" org.apache.hadoop.hbase.client.RetriesExhaustedException: Failed after attempts=36, exceptions:
+ * 即使关闭kafka服务，错误不会消失
  */
 object HbaseDao {
 	/**
@@ -25,7 +28,7 @@ object HbaseDao {
 	 */
 	def init(zkIp:String="localhost",zkPort:String="2181") : Connection = {
 	    val conf = HBaseConfiguration.create()
-	    conf.set("hbase.zookeeper.quorum","localhost")
+	    conf.set("hbase.zookeeper.quorum","127.0.0.1")
 	    conf.set("hbase.zookeeper.property.clientPort", "2181")
 	    
 	    val conn = ConnectionFactory.createConnection(conf)
@@ -49,7 +52,7 @@ object HbaseDao {
 	    //创建user表
 	    val tableDesc = new HTableDescriptor(userTable)
 	    for(i <- 0 until familys.length()){
-	    	val oneFamily = new HColumnDescriptor(familys.getJSONObject(i).getString("columnName").getBytes())
+	    	val oneFamily = new HColumnDescriptor(familys.getJSONObject(i).getString("familyName").getBytes())
 	    	tableDesc.addFamily(oneFamily)
 	    }
 	    admin.createTable(tableDesc)
@@ -60,20 +63,26 @@ object HbaseDao {
       val conn = init()
       val familys = new JSONArray()
       
-      val sidJson = new JSONObject()
-      sidJson.put("columnName", "SID")
-      val snameJson = new JSONObject()
-      snameJson.put("columnName", "SNAME")
-      val uaJson = new JSONObject()
-      uaJson.put("columnName", "UA")
-      val iaJson = new JSONObject()
-      iaJson.put("columnName", "IA")
-      
-      familys.put(sidJson)
-      familys.put(snameJson)
-      familys.put(uaJson)
-      familys.put(iaJson)
+      //第一种方案
+//      val sidJson = new JSONObject()
+//      sidJson.put("familyName", "SID")
+//      val snameJson = new JSONObject()
+//      snameJson.put("familyName", "SNAME")
+//      val uaJson = new JSONObject()
+//      uaJson.put("familyName", "UA")
+//      val iaJson = new JSONObject()
+//      iaJson.put("familyName", "IA")
+//      
+//      familys.put(sidJson)
+//      familys.put(snameJson)
+//      familys.put(uaJson)
+//      familys.put(iaJson)
 
+      val cfJson = new JSONObject()
+      cfJson.put("familyName", "cf")
+      
+      familys.put(cfJson)
+      //第二种方案
       createTable("sensorData",conn,familys)
   }
 }

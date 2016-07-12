@@ -10,6 +10,8 @@ import scala.util.control.Breaks._
  * 将整体的数据分为K个桶，统计每个桶内的数据量，然后统计整个数据量
  * 根据桶的数量和总的数据量，可以判断数据落在哪个桶里，以及中位数的偏移量
  * 取出这个中位数
+ * 
+ * 这种方式适合数据匀速变化的情况，如果数据波动太大，或者太小，就无法对一组数据进行均分
  */
 object SparkTest5 {
   def main(args: Array[String]): Unit = {

@@ -21,5 +21,15 @@ object TupleTest {
     //交换元素
     var t2 = new Tuple2("hello","world")
     println(t2.swap)
+    //List
+    var list = List[Int]()
+    for(i <- 1 to 10){
+      list ::= i 
+    }
+    var n = list.length - 1
+    while(n>=0){
+      println("a:" + n+ "v:" + list(n))
+      n = n -1 
+    }
   }
 }

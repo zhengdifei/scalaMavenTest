@@ -17,16 +17,16 @@ object Spark2Hbase {
   def main(args: Array[String]): Unit = {
 	val conf = HBaseConfiguration.create()
 	conf.set("hbase.zookeeper.quorum","localhost")
-    conf.set("hbase.zookeeper.property.clientPort", "2181")
-    
-    val jobConf = new JobConf(conf,this.getClass())
+  conf.set("hbase.zookeeper.property.clientPort", "2181")
+  
+  val jobConf = new JobConf(conf,this.getClass())
 	jobConf.setOutputFormat(classOf[TableOutputFormat])
 	jobConf.set(TableOutputFormat.OUTPUT_TABLE,"user")
 
 	def convert(triple:(Int,String,Int)) = {
 	  val p = new Put(Bytes.toBytes(triple._1 ))
 	  p.addColumn(Bytes.toBytes("basic"), Bytes.toBytes("name"), Bytes.toBytes(triple._2))
-  	  p.addColumn(Bytes.toBytes("basic"), Bytes.toBytes("age"), Bytes.toBytes(triple._3))
+  	p.addColumn(Bytes.toBytes("basic"), Bytes.toBytes("age"), Bytes.toBytes(triple._3))
   	  (new ImmutableBytesWritable,p)
 	}
 	
